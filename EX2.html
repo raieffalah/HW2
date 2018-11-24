@@ -1,0 +1,236 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" type="text/css">
+    <title>Trivia game</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .m {
+            margin-left: 30%;
+            margin-bottom: 5%;
+            margin-top: 5%;
+            margin-right: 30%;
+        }
+
+        .q {
+            margin-top: 2%;
+            margin-left: 10%;
+        }
+
+        .f {
+            font-size: medium;
+        }
+    </style>
+</head>
+<body>
+<div class="">
+    <p><b>Raief Falah</b></p>
+    <p><b>Aosama Rada</b></p>
+</div>
+<div class="m">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTTOiINkcf7VGaMcDA1oW3E_VjiIZsjsS0_XA364NsuybxvcSHSg"/>
+</div>
+<div>
+    <span class="label label-primary f">select category:</span>
+    <select id="category">
+        <option value="any">Any Category</option>
+        <option value="0">General Knowledge</option>
+        <option value="1">Entertainment:Books</option>
+        <option value="2">Entertainment:Film</option>
+        <option value="3">Entertainment:Music</option>
+        <option value="4">Entertainment:Musicals & Theaters</option>
+        <option value="5">Entertainment:Television</option>
+        <option value="6">Entertainment:Video Games</option>
+        <option value="7">Entertainment:Board Games</option>
+        <option value="8">Science & Nature</option>
+        <option value="9">Science:Computers</option>
+        <option value="10">science:Mathmatics</option>
+        <option value="11">Mythology</option>
+        <option value="12">Sports</option>
+        <option value="13">Geography</option>
+        <option value="14">History</option>
+        <option value="15">Politics</option>
+        <option value="16">Art</option>
+        <option value="17">Celebrities</option>
+        <option value="18">Animals</option>
+        <option value="19">Vehicles</option>
+        <option value="20">Entertainment:Comics</option>
+        <option value="21">science:Gadgets</option>
+        <option value="22">Entertainment:Japanese Anime & Manga</option>
+        <option value="23">Entertainment:Cartoon & Animation</option>
+    </select>
+    <span class="label label-primary f">select question type:</span>
+    <select id="gameType">
+        <option value="any">Any Type</option>
+        <option value="tr/fa">True/False</option>
+        <option value="mul">Multiple Choice</option>
+    </select>
+    <span class="label label-primary f">select difficulty:</span>
+    <select id="difficulty">
+        <option value="any">Any Difficulty</option>
+        <option value="easy">Easy</option>
+        <option value="normal">Normal</option>
+        <option value="hard">Hard</option>
+    </select>
+    <button type="button" class="btn btn-default" onclick="run()">Start</button>
+</div>
+<h1>----------------------------------------------------------------------------------------------------------</h1>
+<h1>----------------------------------------------------------------------------------------------------------</h1>
+<div id="question" class="q f">
+</div>
+<div id="answers" class="q f">
+    <button id="one" type="button" class="btn btn-default hidden" onclick="update(this.textContent)"></button>
+    <button id="two" type="button" class="btn btn-default hidden" onclick="update(this.textContent)"></button>
+    <button id="three" type="button" class="btn btn-default hidden" onclick="update(this.textContent)"></button>
+    <button id="four" type="button" class="btn btn-default hidden" onclick="update(this.textContent)"></button>
+</div>
+<script type="text/javascript">
+    var score = 0;
+    var correctAns;
+
+    function run() {
+        var a = "";
+        if (difficulty.value == 'easy') {
+            a = "&difficulty=easy";
+        }
+        if (difficulty.value == 'normal' || score >= 5) {
+            difficulty.value = 'normal';
+            a = "&difficulty=medium";
+        }
+        if (difficulty.value == 'hard' || score >= 10) {
+            a = "&difficulty=hard";
+        }
+        var b = "";
+        if (gameType.value == 'mul') {
+            b = "&type=multiple";
+        }
+        if (gameType.value == 'tr/fa') {
+            b = "&type=boolean";
+        }
+        var c = "";
+        switch (category.value) {
+        case "0":
+            c = "&category=9";
+            break;
+        case "1":
+            c = "&category=10";
+            break;
+        case "2":
+            c = "&category=11";
+            break;
+        case "3":
+            c = "&category=12";
+            break;
+        case "4":
+            c = "&category=13";
+            break;
+        case "5":
+            c = "&category=14";
+            break;
+        case "6":
+            c = "&category=15";
+            break;
+        case "7":
+            c = "&category=16";
+            break;
+        case "8":
+            c = "&category=17";
+            break;
+        case "9":
+            c = "&category=18";
+            break;
+        case "10":
+            c = "&category=19";
+            break;
+        case "11":
+            c = "&category=20";
+            break;
+        case "12":
+            c = "&category=21";
+            break;
+        case "13":
+            c = "&category=22";
+            break;
+        case "14":
+            c = "&category=23";
+            break;
+        case "15":
+            c = "&category=24";
+            break;
+        case "16":
+            c = "&category=25";
+            break;
+        case "17":
+            c = "&category=26";
+            break;
+        case "18":
+            c = "&category=27";
+            break;
+        case "19":
+            c = "&category=28";
+            break;
+        case "20":
+            c = "&category=29";
+            break;
+        case "21":
+            c = "&category=30";
+            break;
+        case "22":
+            c = "&category=31";
+            break;
+        case "23":
+            c = "&category=32";
+            break;
+        }
+        $.ajax({
+            url: "https://opentdb.com/api.php?amount=1" + c + a + b,
+            type: "GET",
+            success: function(data) {
+                $("#question").html(data.results[0].question);
+                if (data.results[0].type == "boolean") {
+                    $("#one").removeClass("hidden");
+                    $("#two").removeClass("hidden");
+                    correctAns = data.results[0].correct_answer;
+                    document.getElementById("one").textContent = "True";
+                    document.getElementById("two").textContent = "False";
+                    $("#three").addClass("hidden");
+                    $("#four").addClass("hidden");
+                } else {
+                    $("#one").removeClass("hidden");
+                    $("#two").removeClass("hidden");
+                    $("#three").removeClass("hidden");
+                    $("#four").removeClass("hidden");
+                    var a = [];
+                    correctAns = data.results[0].correct_answer;
+                    a[0] = data.results[0].correct_answer;
+                    a[1] = data.results[0].incorrect_answers[0];
+                    a[2] = data.results[0].incorrect_answers[1];
+                    a[3] = data.results[0].incorrect_answers[2];
+                    a.sort(function() {
+                        return .4 - Math.random();
+                    });
+                    document.getElementById("one").textContent = a[0];
+                    document.getElementById("two").textContent = a[1];
+                    document.getElementById("three").textContent = a[2];
+                    document.getElementById("four").textContent = a[3];
+                }
+            },
+            error: function(err) {
+            }
+        });
+    }
+
+    function update(obj) {
+        if (obj == correctAns) {
+            score++;
+            alert("correct!\nscore:" + score);
+        } else {
+            alert("incorrect :(\nscore:" + score);
+        }
+
+        run();
+    }
+
+</script>
+</body>
+</html>
